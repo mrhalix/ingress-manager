@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ingress Annotations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Ingress Annotations</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>IngressClassName</th>
+                <th>Namespace</th>
+                <th>Host</th>
+                {% for annotation in annotations_to_watch %}
+                <th>{{ annotation.replace("domainmanager.pegah.tech/", "") }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingress in ingresses %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ ingress.ingressClassName }}</td>
+                <td>{{ ingress.namespace }}</td>
+                <td><a href="http://{{ ingress.host }}" target="_blank">{{ ingress.host }}</a></td>
+                {% for annotation in annotations_to_watch %}
+                <td>{{ ingress.annotations[annotation.replace("domainmanager.pegah.tech/", "")] if annotation.replace("domainmanager.pegah.tech/", "") in ingress.annotations else '-' }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
